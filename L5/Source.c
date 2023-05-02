@@ -108,6 +108,7 @@ void add_to_cache(Cache* cache, const char* domain, const char* ip) {
     if (cache->tail == NULL) {
         cache->tail = new_entry;
     }
+
     if (cache->size == CACHE_SIZE) {
         CacheEntry* entry_to_remove = cache->tail;
         cache->tail = entry_to_remove->prev;
@@ -115,11 +116,13 @@ void add_to_cache(Cache* cache, const char* domain, const char* ip) {
             cache->tail->next = NULL;
         }
         unsigned int index_to_remove = hash(entry_to_remove->domain);
+
         if (entry_to_remove == cache->entries[index_to_remove]) {
             cache->entries[index_to_remove] = entry_to_remove->next;
         }
         else {
             CacheEntry* current_entry = cache->entries[index_to_remove];
+
             while (current_entry != NULL) {
                 if (current_entry->next == entry_to_remove) {
                     current_entry->next = entry_to_remove->next;
