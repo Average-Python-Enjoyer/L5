@@ -141,7 +141,7 @@ char* find_ip_address(FILE* file, Cache* cache, char* domain) {
     if (cached_ip != NULL) {
         printf(ANSI_COLOR_GREEN "\nHIT\n" ANSI_COLOR_RESET);
         printf(ANSI_COLOR_CYAN "IP address: %s\n" ANSI_COLOR_RESET, cached_ip);
-        return strdup(cached_ip);
+        return _strdup(cached_ip);
     }
     printf(ANSI_COLOR_RED "\nMISS\n" ANSI_COLOR_RESET);
     fseek(file, 0, SEEK_SET);
@@ -153,7 +153,7 @@ char* find_ip_address(FILE* file, Cache* cache, char* domain) {
             if (strcmp(type, "A") == 0) {
                 printf(ANSI_COLOR_CYAN "IP address: %s\n" ANSI_COLOR_RESET, value);
                 add_to_cache(cache, original_domain, value);
-                return strdup(value);
+                return _strdup(value);
             }
             else if (strcmp(type, "CNAME") == 0) {
                 strcpy(domain, value);
