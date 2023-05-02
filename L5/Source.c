@@ -39,6 +39,9 @@ void init_cache(Cache* cache) {
 }
 int is_valid_cname(const char* cname) {
     FILE* file = fopen("dns.txt", "r");
+    if (file == NULL) {
+        return 0;
+    }
     char line[MAX_LENGTH];
     while (fgets(line, MAX_LENGTH, file) != NULL) {
         char name[MAX_LENGTH];
@@ -157,7 +160,9 @@ char* find_ip_address(FILE* file, Cache* cache, char* domain) {
     fseek(file, 0, SEEK_SET);
     char line[MAX_LENGTH];
     while (fgets(line, MAX_LENGTH, file) != NULL) {
-        char name[MAX_LENGTH], type[MAX_LENGTH], value[MAX_LENGTH];
+        char name[MAX_LENGTH];
+        char type[MAX_LENGTH];
+        char value[MAX_LENGTH];
         sscanf(line, "%s %*s %s %s", name, type, value);
         if (strcmp(name, domain) == 0) {
             if (strcmp(type, "A") == 0) {
@@ -196,9 +201,14 @@ int is_valid_ip(const char* ip) {
 }
 int is_duplicate_record(const char* domain, const char* type, const char* value) {
     FILE* file = fopen("dns.txt", "r");
+    if (file == NULL) {
+        return 0;
+    }
     char line[MAX_LENGTH];
     while (fgets(line, MAX_LENGTH, file) != NULL) {
-        char name[MAX_LENGTH], record_type[MAX_LENGTH], record_value[MAX_LENGTH];
+        char name[MAX_LENGTH];
+        char record_type[MAX_LENGTH];
+        char record_value[MAX_LENGTH];
         sscanf(line, "%s %*s %s %s", name, record_type, record_value);
         if (strcmp(name, domain) == 0 && strcmp(record_type, type) == 0 && strcmp(record_value, value) == 0) {
             fclose(file);
@@ -220,7 +230,9 @@ void find_domains_by_ip() {
     int found = 0;
     char line[MAX_LENGTH];
     while (fgets(line, MAX_LENGTH, file) != NULL) {
-        char name[MAX_LENGTH], type[MAX_LENGTH], value[MAX_LENGTH];
+        char name[MAX_LENGTH];
+        char type[MAX_LENGTH];
+        char value[MAX_LENGTH];
         sscanf(line, "%s %*s %s %s", name, type, value);
         if (strcmp(type, "A") == 0 && strcmp(value, ip) == 0) {
             printf("%s\n", name);
