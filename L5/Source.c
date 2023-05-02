@@ -253,10 +253,45 @@ void find_domains_by_ip() {
         printf(ANSI_COLOR_RED "No domains found\n\n" ANSI_COLOR_RESET);
     }
 }
+int is_valid_domain(const char* domain) {
+    // Check if the domain name is empty
+    if (domain[0] == '\0') {
+        return 0;
+    }
+
+    // Check if the domain name contains only valid characters
+    for (int i = 0; domain[i] != '\0'; i++) {
+        if (!isalnum(domain[i]) && domain[i] != '.' && domain[i] != '-') {
+            return 0;
+        }
+    }
+
+    // Check if the domain name has a valid format
+    int dot_count = 0;
+    for (int i = 0; domain[i] != '\0'; i++) {
+        if (domain[i] == '.') {
+            dot_count++;
+            if (i == 0 || domain[i - 1] == '.' || domain[i + 1] == '\0') {
+                return 0;
+            }
+        }
+    }
+    if (dot_count < 1) {
+        return 0;
+    }
+
+    return 1;
+}
 void add_record() {
-    printf(ANSI_COLOR_YELLOW "\nEnter domain name: " ANSI_COLOR_RESET);
     char domain[MAX_LENGTH];
-    scanf("%s", domain);
+    do {
+        printf(ANSI_COLOR_YELLOW "\nEnter domain name: " ANSI_COLOR_RESET);
+        scanf("%s", domain);
+        if (!is_valid_domain(domain)) {
+            printf(ANSI_COLOR_RED "Invalid domain name\n" ANSI_COLOR_RESET);
+        }
+    } while (!is_valid_domain(domain));
+
     char type[MAX_LENGTH];
     do {
         printf(ANSI_COLOR_YELLOW "Enter record type (A or CNAME): " ANSI_COLOR_RESET);
@@ -265,6 +300,7 @@ void add_record() {
             printf(ANSI_COLOR_RED "Invalid record type\n" ANSI_COLOR_RESET);
         }
     } while (strcmp(type, "A") != 0 && strcmp(type, "CNAME") != 0);
+
     char value[MAX_LENGTH];
     if (strcmp(type, "A") == 0) {
         do {
@@ -284,10 +320,12 @@ void add_record() {
             }
         } while (!is_valid_cname(value));
     }
+
     if (is_duplicate_record(domain, type, value)) {
         printf(ANSI_COLOR_RED "Duplicate record\n" ANSI_COLOR_RESET);
         return;
     }
+
     FILE* file = fopen("dns.txt", "a");
     if (file == NULL) {
         printf(ANSI_COLOR_RED "Could not open file\n\n" ANSI_COLOR_RESET);
@@ -295,6 +333,7 @@ void add_record() {
     }
     fprintf(file, "%s IN %s %s\n", domain, type, value);
     fclose(file);
+
     printf(ANSI_COLOR_GREEN "Record added\n" ANSI_COLOR_RESET);
 }
 void free_cache(Cache* cache) {
