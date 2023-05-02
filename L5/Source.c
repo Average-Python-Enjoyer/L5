@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #define MAX_LENGTH 256
 #define CACHE_SIZE 3
 #define ANSI_COLOR_RED     "\x1b[31m"
@@ -258,7 +259,6 @@ int is_valid_domain(const char* domain) {
     if (domain[0] == '\0') {
         return 0;
     }
-
     // Check if the domain name contains only valid characters
     for (int i = 0; domain[i] != '\0'; i++) {
         if (!isalnum(domain[i]) && domain[i] != '.' && domain[i] != '-') {
