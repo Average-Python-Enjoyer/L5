@@ -76,6 +76,18 @@ void move_to_front(Cache* cache, CacheEntry* entry) {
     }
     cache->head = entry;
 }
+char* find_in_cache(Cache* cache, const char* domain) {
+    unsigned int index = hash(domain);
+    CacheEntry* entry = cache->entries[index];
+    while (entry != NULL) {
+        if (strcmp(entry->domain, domain) == 0) {
+            move_to_front(cache, entry);
+            return entry->ip;
+        }
+        entry = entry->next;
+    }
+    return NULL;
+}
 void add_to_cache(Cache* cache, const char* domain, const char* ip) {
     if (find_in_cache(cache, domain) != NULL) {
         return;
@@ -126,6 +138,7 @@ void add_to_cache(Cache* cache, const char* domain, const char* ip) {
     }
     cache->entries[index] = new_entry;
 }
+
 void get_domain(char* domain) {
     printf(ANSI_COLOR_YELLOW "\nEnter domain name: " ANSI_COLOR_RESET);
     scanf("%s", domain);
