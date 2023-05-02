@@ -227,6 +227,10 @@ void find_domains_by_ip() {
         return;
     }
     FILE* file = fopen("dns.txt", "r");
+    if (file == NULL) {
+        printf(ANSI_COLOR_RED "Could not open file\n\n" ANSI_COLOR_RESET);
+        return;
+    }
     int found = 0;
     char line[MAX_LENGTH];
     while (fgets(line, MAX_LENGTH, file) != NULL) {
@@ -280,6 +284,10 @@ void add_record() {
         return;
     }
     FILE* file = fopen("dns.txt", "a");
+    if (file == NULL) {
+        printf(ANSI_COLOR_RED "Could not open file\n\n" ANSI_COLOR_RESET);
+        return;
+    }
     fprintf(file, "%s IN %s %s\n", domain, type, value);
     fclose(file);
     printf(ANSI_COLOR_GREEN "Record added\n" ANSI_COLOR_RESET);
