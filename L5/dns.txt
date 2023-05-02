@@ -1,0 +1,9 @@
+google.com IN A 172.217.10.14
+boogle.com IN CNAME google.com
+facebook.com IN A 157.240.22.35
+bing.com IN A 204.79.197.200
+yahoo.com IN A 98.138.219.231
+amazon.com IN A 176.32.103.205
+
+toto.com IN A 123.43.56.123
+toto2.com IN CNAME toto.com
