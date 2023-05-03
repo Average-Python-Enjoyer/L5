@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
 #define MAX_LENGTH 256
 #define CACHE_SIZE 3
 #define ANSI_COLOR_RED     "\x1b[31m"
@@ -255,18 +256,14 @@ void find_domains_by_ip() {
     }
 }
 int is_valid_domain(const char* domain) {
-    // Check if the domain name is empty
     if (domain[0] == '\0') {
         return 0;
     }
-    // Check if the domain name contains only valid characters
     for (int i = 0; domain[i] != '\0'; i++) {
         if (!isalnum(domain[i]) && domain[i] != '.' && domain[i] != '-') {
             return 0;
         }
     }
-
-    // Check if the domain name has a valid format
     int dot_count = 0;
     for (int i = 0; domain[i] != '\0'; i++) {
         if (domain[i] == '.') {
@@ -279,7 +276,6 @@ int is_valid_domain(const char* domain) {
     if (dot_count < 1) {
         return 0;
     }
-
     return 1;
 }
 void add_record() {
