@@ -185,6 +185,20 @@ int is_duplicate_record(const char* domain, const char* type, const char* value)
     fclose(file);
     return 0;
 }
+void find_and_print_cname_records(FILE* file, const char* domain) {
+    fseek(file, 0, SEEK_SET);
+    char cname_line[MAX_LENGTH];
+    while (fgets(cname_line, MAX_LENGTH, file) != NULL) {
+        char cname_name[MAX_LENGTH];
+        char cname_type[MAX_LENGTH];
+        char cname_value[MAX_LENGTH];
+        sscanf(cname_line, "%s %*s %s %s", cname_name, cname_type, cname_value);
+        if (strcmp(cname_type, "CNAME") == 0 && strcmp(cname_value, domain) == 0) {
+            printf("%s\n", cname_name);
+        }
+    }
+}
+
 void find_domains_by_ip() {
     printf(ANSI_COLOR_YELLOW "\nEnter IP address: " ANSI_COLOR_RESET);
     char ip[MAX_LENGTH];
@@ -208,18 +222,7 @@ void find_domains_by_ip() {
         if (strcmp(type, "A") == 0 && strcmp(value, ip) == 0) {
             printf("%s\n", name);
             found = 1;
-
-            fseek(file, 0, SEEK_SET);
-            char cname_line[MAX_LENGTH];
-            while (fgets(cname_line, MAX_LENGTH, file) != NULL) {
-                char cname_name[MAX_LENGTH];
-                char cname_type[MAX_LENGTH];
-                char cname_value[MAX_LENGTH];
-                sscanf(cname_line, "%s %*s %s %s", cname_name, cname_type, cname_value);
-                if (strcmp(cname_type, "CNAME") == 0 && strcmp(cname_value, name) == 0) {
-                    printf("%s\n", cname_name);
-                }
-            }
+            find_and_print_cname_records(file, name);
         }
     }
     fclose(file);

@@ -44,5 +44,6 @@ void find_domains_by_ip();
 int is_valid_domain(const char* domain);
 void add_record();
 void free_cache(Cache* cache);
+void find_and_print_cname_records(FILE* file, const char* domain);
 
 #endif //INC_5_1_FUNCTIONS_H
