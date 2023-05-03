@@ -19,7 +19,8 @@ int main() {
             while ((c = getchar()) != '\n' && c != EOF);
             continue;
         }
-        if (choice == 1) {
+        switch (choice) {
+        case 1: {
             char domain[MAX_LENGTH];
             get_domain(domain);
             char original_domain[MAX_LENGTH];
@@ -38,15 +39,19 @@ int main() {
                 free(ip);
             }
             fclose(file);
+            break;
         }
-        else if (choice == 2) {
+        case 2:
             show_cache(&cache);
-        }
-        else if (choice == 3) {
+            break;
+        case 3:
             add_record();
-        }
-        else if (choice == 4) {
+            break;
+        case 4:
             find_domains_by_ip();
+            break;
+        default:
+            break;
         }
     } while (choice != 0);
 
