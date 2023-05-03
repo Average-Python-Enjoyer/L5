@@ -69,23 +69,7 @@ char* find_in_cache(Cache* cache, const char* domain) {
     }
     return NULL;
 }
-void remove_entry_from_cache(Cache* cache, CacheEntry* entry_to_remove) {
-    unsigned int index_to_remove = hash(entry_to_remove->domain);
-    if (entry_to_remove == cache->entries[index_to_remove]) {
-        cache->entries[index_to_remove] = entry_to_remove->next;
-    }
-    else {
-        CacheEntry* current_entry = cache->entries[index_to_remove];
-        while (current_entry != NULL) {
-            if (current_entry->next == entry_to_remove) {
-                current_entry->next = entry_to_remove->next;
-                break;
-            }
-            current_entry = current_entry->next;
-        }
-    }
-    free(entry_to_remove);
-}
+
 
 void add_to_cache(Cache* cache, const char* domain, const char* ip) {
     if (find_in_cache(cache, domain) != NULL) {
@@ -307,6 +291,23 @@ void add_record() {
     fclose(file);
 
     printf(ANSI_COLOR_GREEN "Record added\n" ANSI_COLOR_RESET);
+}
+void remove_entry_from_cache(Cache* cache, CacheEntry* entry_to_remove) {
+    unsigned int index_to_remove = hash(entry_to_remove->domain);
+    if (entry_to_remove == cache->entries[index_to_remove]) {
+        cache->entries[index_to_remove] = entry_to_remove->next;
+    }
+    else {
+        CacheEntry* current_entry = cache->entries[index_to_remove];
+        while (current_entry != NULL) {
+            if (current_entry->next == entry_to_remove) {
+                current_entry->next = entry_to_remove->next;
+                break;
+            }
+            current_entry = current_entry->next;
+        }
+    }
+    free(entry_to_remove);
 }
 void free_cache(Cache* cache) {
     CacheEntry* entry = cache->head;
