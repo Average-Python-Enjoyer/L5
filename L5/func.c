@@ -307,7 +307,6 @@ void remove_entry_from_cache(Cache* cache, CacheEntry* entry_to_remove) {
             current_entry = current_entry->next;
         }
     }
-    free(entry_to_remove);
 }
 void free_cache(Cache* cache) {
     CacheEntry* entry = cache->head;
