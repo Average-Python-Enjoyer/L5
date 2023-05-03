@@ -69,7 +69,14 @@ char* find_in_cache(Cache* cache, const char* domain) {
     }
     return NULL;
 }
-
+void show_cache(Cache* cache) {
+    printf("\nCache:\n");
+    CacheEntry* entry = cache->head;
+    while (entry != NULL) {
+        printf(ANSI_COLOR_CYAN "%s %s\n" ANSI_COLOR_RESET, entry->domain, entry->ip);
+        entry = entry->next;
+    }
+}
 
 void add_to_cache(Cache* cache, const char* domain, const char* ip) {
     if (find_in_cache(cache, domain) != NULL) {
@@ -106,14 +113,16 @@ void add_to_cache(Cache* cache, const char* domain, const char* ip) {
     cache->entries[index] = new_entry;
 }
 
-void get_domain(char* domain) {
-    printf(ANSI_COLOR_YELLOW "\nEnter domain name: " ANSI_COLOR_RESET);
-    scanf("%s", domain);
-}
 FILE* open_dns_file() {
     FILE* file = fopen("dns.txt", "r");
     return file;
 }
+
+void get_domain(char* domain) {
+    printf(ANSI_COLOR_YELLOW "\nEnter domain name: " ANSI_COLOR_RESET);
+    scanf("%s", domain);
+}
+
 char* find_ip_address(FILE* file, Cache* cache, char* domain) {
     char original_domain[MAX_LENGTH];
     strcpy(original_domain, domain);
@@ -145,14 +154,7 @@ char* find_ip_address(FILE* file, Cache* cache, char* domain) {
     }
     return NULL;
 }
-void show_cache(Cache* cache) {
-    printf("\nCache:\n");
-    CacheEntry* entry = cache->head;
-    while (entry != NULL) {
-        printf(ANSI_COLOR_CYAN "%s %s\n" ANSI_COLOR_RESET, entry->domain, entry->ip);
-        entry = entry->next;
-    }
-}
+
 int is_valid_ip(const char* ip) {
     int octets[4];
     int num_octets = sscanf(ip, "%d.%d.%d.%d", &octets[0], &octets[1], &octets[2], &octets[3]);
