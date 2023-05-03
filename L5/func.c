@@ -1,9 +1,9 @@
 #include "func.h"
 
 unsigned int hash(const char* str) {
-    unsigned int hash = 0;
+    unsigned int hash = 5381;
     for (int i = 0; str[i] != '\0'; i++) {
-        hash = 31 * hash + str[i];
+        hash = 33 * hash + str[i];
     }
     return hash % CACHE_SIZE;
 }
@@ -208,6 +208,18 @@ void find_domains_by_ip() {
         if (strcmp(type, "A") == 0 && strcmp(value, ip) == 0) {
             printf("%s\n", name);
             found = 1;
+
+            fseek(file, 0, SEEK_SET);
+            char cname_line[MAX_LENGTH];
+            while (fgets(cname_line, MAX_LENGTH, file) != NULL) {
+                char cname_name[MAX_LENGTH];
+                char cname_type[MAX_LENGTH];
+                char cname_value[MAX_LENGTH];
+                sscanf(cname_line, "%s %*s %s %s", cname_name, cname_type, cname_value);
+                if (strcmp(cname_type, "CNAME") == 0 && strcmp(cname_value, name) == 0) {
+                    printf("%s\n", cname_name);
+                }
+            }
         }
     }
     fclose(file);
